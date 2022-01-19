@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>实现mobx的autorun函数 | 曾经的你</title>
+    <meta name="description" content="看一看世界的繁华">
+    <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/assets/css/0.styles.b5500b79.css" as="style"><link rel="preload" href="/assets/js/app.32a77fa1.js" as="script"><link rel="preload" href="/assets/js/5.3db1e33a.js" as="script"><link rel="preload" href="/assets/js/1.1263133a.js" as="script"><link rel="preload" href="/assets/js/23.d74a2a32.js" as="script"><link rel="prefetch" href="/assets/js/10.6bf92a39.js"><link rel="prefetch" href="/assets/js/11.d1839701.js"><link rel="prefetch" href="/assets/js/12.717defdf.js"><link rel="prefetch" href="/assets/js/13.aef896cf.js"><link rel="prefetch" href="/assets/js/14.f481325a.js"><link rel="prefetch" href="/assets/js/15.77b15318.js"><link rel="prefetch" href="/assets/js/16.b08e42b8.js"><link rel="prefetch" href="/assets/js/17.6d1a0e09.js"><link rel="prefetch" href="/assets/js/18.e6be9a62.js"><link rel="prefetch" href="/assets/js/19.da1f1a70.js"><link rel="prefetch" href="/assets/js/20.f7120a5d.js"><link rel="prefetch" href="/assets/js/21.7c3b52a5.js"><link rel="prefetch" href="/assets/js/22.94ab8097.js"><link rel="prefetch" href="/assets/js/24.f770a461.js"><link rel="prefetch" href="/assets/js/25.a9bc2877.js"><link rel="prefetch" href="/assets/js/26.7153c46a.js"><link rel="prefetch" href="/assets/js/27.5a94d914.js"><link rel="prefetch" href="/assets/js/28.2557607b.js"><link rel="prefetch" href="/assets/js/29.c8d7094b.js"><link rel="prefetch" href="/assets/js/3.04f17590.js"><link rel="prefetch" href="/assets/js/30.7aa5ce47.js"><link rel="prefetch" href="/assets/js/31.23b894b7.js"><link rel="prefetch" href="/assets/js/32.bcde2786.js"><link rel="prefetch" href="/assets/js/33.ff121c8f.js"><link rel="prefetch" href="/assets/js/34.704c2113.js"><link rel="prefetch" href="/assets/js/4.7ab9b31c.js"><link rel="prefetch" href="/assets/js/6.92ee8563.js"><link rel="prefetch" href="/assets/js/7.6650276c.js"><link rel="prefetch" href="/assets/js/8.eda84085.js"><link rel="prefetch" href="/assets/js/9.2c11c80b.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.b5500b79.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div><div class="theme-container"><div><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/head.jpg" alt="曾经的你" class="logo"> <span class="site-name">曾经的你</span></a> <div class="links"><div class="color-picker"><a href="#" class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="theme-options"><!----> <div class="dark-theme-options toggle-option"><label for="dark-theme-toggle">Enable Dark Theme?</label> <input id="dark-theme-toggle" type="checkbox" checked="checked"></div></div></div></div> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      文章
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/category/随心.html" class="nav-link"><i class="iconfont undefined"></i>
+  随心
+</a></li><li class="dropdown-item"><!----> <a href="/category/笔记.html" class="nav-link"><i class="iconfont undefined"></i>
+  笔记
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签
+</a></div><div class="nav-item"><a href="/timeLine/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      关注我
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/huih99" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      文章
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/category/随心.html" class="nav-link"><i class="iconfont undefined"></i>
+  随心
+</a></li><li class="dropdown-item"><!----> <a href="/category/笔记.html" class="nav-link"><i class="iconfont undefined"></i>
+  笔记
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签
+</a></div><div class="nav-item"><a href="/timeLine/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      关注我
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/huih99" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>实现mobx的autorun函数</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#什么是-autorun" class="sidebar-link">什么是 autoRun</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#依赖收集" class="sidebar-link">依赖收集</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#如何实现依赖收集" class="sidebar-link">如何实现依赖收集</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#实现思路" class="sidebar-link">实现思路</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#开始吧" class="sidebar-link">开始吧</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/views/record/2019/%E5%AE%9E%E7%8E%B0mobx%E7%9A%84autorun%E5%87%BD%E6%95%B0.html#总结" class="sidebar-link">总结</a><ul class="sidebar-sub-headers"></ul></li></ul></section></li></ul> </aside> <div><main class="page reco-hide"> <div class="page-title"><h1>实现mobx的autorun函数</h1> <hr> <div data-v-0b496ca7><i class="iconfont reco-account" data-v-0b496ca7><span data-v-0b496ca7>tanhui</span></i> <i class="iconfont reco-date" data-v-0b496ca7><span data-v-0b496ca7>5/20/2019</span></i> <!----> <i class="iconfont reco-tag tags" data-v-0b496ca7><span class="tag-item" data-v-0b496ca7>
+      js
+    </span></i></div></div> <div class="content__default"><blockquote><p>mobx 是一个数据管理的库，其核心是依赖收集，autoRun 函数就是一个典型的依赖收集</p></blockquote> <h2 id="什么是-autorun"><a href="#什么是-autorun" aria-hidden="true" class="header-anchor">#</a> 什么是 autoRun</h2> <blockquote><p>autoRun 是一个函数，接受一个函数入参，autoRun 会在第一次调用时执行一次传入的函数，并且收集依赖，而后在函数中使用到的依赖有变动时再次执行</p></blockquote> <ul><li>示例：</li></ul> <div class="language-js line-numbers-mode"><pre class="language-js"><code>  <span class="token comment">// autorun的使用</span>
+  <span class="token keyword">const</span> obj <span class="token operator">=</span> <span class="token function">observable</span><span class="token punctuation">(</span><span class="token punctuation">{</span> a<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> b<span class="token punctuation">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">autoRun</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//输出1</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  obj<span class="token punctuation">.</span>b <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span> <span class="token comment">//什么都不会发生</span>
+  obj<span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">//这时会再次执行autorun中的函数，打印2</span>
+
+<span class="token comment">// 为什么？ 因为 autorun 中的函数依赖了 obj.a，所以当 a 有变动时，自热会再次执行函数</span>
+
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><h2 id="依赖收集"><a href="#依赖收集" aria-hidden="true" class="header-anchor">#</a> 依赖收集</h2> <p>上述代码中的 autoRun 是一个非常智能的函数，能够知道传入的函数到底用到了哪些属性，然后在该属性发生变动时再次执行该函数。 其实这里的过程就是一个依赖收集的过程，vue 的双向绑定的核心就是依赖收集。当函数用到了某个对象或者对象中的某个属性，那么这个对象或者其属性就是这个函数的一个依赖项，可以有很多的依赖，无论哪个依赖发生变动都能检测到并且触发函数再次执行。</p> <h2 id="如何实现依赖收集"><a href="#如何实现依赖收集" aria-hidden="true" class="header-anchor">#</a> 如何实现依赖收集</h2> <p>在 es5 的时代，实现依赖收集主要是靠对象劫持，通过 Object.defineProperty 定义每一个属性的 getter 与 setter，但是这种方法有缺陷: 一是不能劫持整个对象，只能劫持每个对象属性。二是不能监听到数组变动。在 es6 标准下，有一个新的原生代理函数， Proxy，通过 Proxy 与 Reflect 的组合可以轻松的代理对象，包括数组。这里方便起见，也使用 Proxy 来实现依赖收集。</p> <h2 id="实现思路"><a href="#实现思路" aria-hidden="true" class="header-anchor">#</a> 实现思路</h2> <p>在最上面的 mobx 的 autoRun 函数的功能展示中，第一步是定义了一个observable对象，这是最重要的一步，也就是将一个普通对象转为可观察的对象。第二步就是使用 autoRun 来注册 observer(观察者)。所以实现的步骤如下：</p> <ol><li>实现observable函数</li> <li>实现autoRun函数</li></ol> <h2 id="开始吧"><a href="#开始吧" aria-hidden="true" class="header-anchor">#</a> 开始吧</h2> <ol><li>先定义需要用到的几个变量</li></ol> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">//proxies: 储存所有代理对象</span>
+<span class="token keyword">const</span> proxies <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//observers: 储存所有观察函数</span>
+<span class="token keyword">const</span> observers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//注：使用Map结构是为了存储代理对象时以原对象作为key，使用更方便</span>
+
+<span class="token comment">/*
+ * queuedObservers: observer执行队列
+ * 这里采用Set结构是为了去重
+ * 防止在当前调用栈中多次添加同一个observer，
+ * 如observableData.a = xx; observableData.b = xx
+ * 这种情况下observableData.a的observer只应添加一次
+ */</span>
+<span class="token keyword">let</span> queuedObservers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// queued: 当前是否处于observer队列执行中</span>
+<span class="token keyword">let</span> queued <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token comment">// currentObserver: 当前观察者,也就是autoRun执行时的函数</span>
+<span class="token keyword">let</span> currentObserver <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><ol start="2"><li>一些辅助函数</li></ol> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">/**
+ *关联observer到目标对象的key
+ *
+ * @param {*} target 目标对象
+ * @param {*} key 注册observer的key
+ */</span>
+<span class="token keyword">function</span> <span class="token function">registerObserver</span><span class="token punctuation">(</span><span class="token parameter">target<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> fns <span class="token operator">=</span> observes<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  fns<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> fns<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  fns<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>currentObserver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observes<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> fns<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ *队列中插入observer
+ *
+ * @param {*} target 观察对象
+ * @param {*} key key
+ */</span>
+<span class="token keyword">function</span> <span class="token function">queueObservers</span><span class="token punctuation">(</span><span class="token parameter">target<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 取得当前target注册过的所有observers</span>
+  <span class="token keyword">const</span> registerObservers <span class="token operator">=</span> observes<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>registerObservers <span class="token operator">&amp;&amp;</span> registerObservers<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 当前队列中存在的observers</span>
+    <span class="token keyword">const</span> existObservers <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>queuedObservers<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    queuedObservers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span>existObservers<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>registerObservers<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">invokeObserves</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ *执行队列中的所有observer
+ *
+ * @returns
+ */</span>
+<span class="token keyword">function</span> <span class="token function">invokeObserves</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>queued<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  queued <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 在下一个事件循环里取出所有队列中的所有observer并执行</span>
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> observer <span class="token keyword">of</span> queuedObservers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">observer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    queued <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    queuedObservers<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br></div></div><ol start="3"><li>observable 和 autoRun</li></ol> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">//observable函数</span>
+<span class="token keyword">function</span> <span class="token function">observable</span><span class="token punctuation">(</span><span class="token parameter">obj</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> proxies<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">toObservable</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">toObservable</span><span class="token punctuation">(</span><span class="token parameter">obj</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> proxyObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Proxy</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token keyword">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> receiver<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> result <span class="token operator">=</span> Reflect<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> receiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> resultIsObject <span class="token operator">=</span> result <span class="token operator">&amp;&amp;</span> <span class="token keyword">typeof</span> result <span class="token operator">===</span> <span class="token string">'object'</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>currentObserver<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">registerObserver</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> resultIsObject <span class="token operator">?</span> <span class="token function">observable</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">:</span> result<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">set</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> receiver<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">===</span> <span class="token string">'length'</span> <span class="token operator">||</span> value <span class="token operator">!==</span> Reflect<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> receiver<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">queueObservers</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> Reflect<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> receiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">//autoRun</span>
+<span class="token keyword">function</span> <span class="token function">autoRun</span><span class="token punctuation">(</span><span class="token parameter">fn</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  currentObserver <span class="token operator">=</span> fn<span class="token punctuation">;</span>
+  <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  currentObserver <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br></div></div><ol start="4"><li>测试</li></ol> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> observableData <span class="token operator">=</span> <span class="token function">observable</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'xiaoming'</span><span class="token punctuation">,</span>
+  age<span class="token punctuation">:</span> <span class="token number">18</span><span class="token punctuation">,</span>
+  sex<span class="token punctuation">:</span> <span class="token string">'male'</span><span class="token punctuation">,</span>
+  hobbies<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'basketball'</span><span class="token punctuation">,</span> <span class="token string">'swim'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">autoRun</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>observableData<span class="token punctuation">.</span>name<span class="token punctuation">)</span> <span class="token comment">// xiaoming</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">autoRun</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>observableData<span class="token punctuation">.</span>hobbies<span class="token punctuation">)</span> <span class="token comment">// ['basketball', 'swim']</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+observableData<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'xiaohe'</span><span class="token punctuation">;</span>
+observableData<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'小红'</span><span class="token punctuation">;</span>
+observableData<span class="token punctuation">.</span>hobbies<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'music'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">//监测到name和hobbies属性变动</span>
+<span class="token comment">//打印结果： '小红', ['basketball','swim','music'];</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><h2 id="总结"><a href="#总结" aria-hidden="true" class="header-anchor">#</a> 总结</h2> <p>主要是了解依赖收集到底是怎么一回事，无非就是通过属性劫持或者通过es6的proxy代理来达到目的。Proxy能代理的不止get和set，是一个功能很强大的函数，现在Vue3.0版本中也将使用Proxy来代替之前的Object.defineProperty。</p></div> <!----> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated: </span> <span class="time">6/25/2021, 3:12:46 PM</span></div></footer> <!----> </main> <div class="valine-wrapper" data-v-0162251c><div id="valine" data-v-0162251c></div></div></div> <div class="back-to-ceiling" style="right:1rem;bottom:3rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;background-color:rgba(231, 234, 241,.5);display:none;" data-v-d0bfeaa4 data-v-d0bfeaa4><i class="iconfont reco-up" data-v-d0bfeaa4></i></div></div></div></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.32a77fa1.js" defer></script><script src="/assets/js/5.3db1e33a.js" defer></script><script src="/assets/js/1.1263133a.js" defer></script><script src="/assets/js/23.d74a2a32.js" defer></script>
+  </body>
+</html>
